@@ -91,6 +91,8 @@ dragon2 = Dragon.new("Ice","Morty","Saphire-blue") # Creates a new object instan
 p dragon2 # Prints: #<Dragon:0x000000013a97ab18 @name="Ice", @rider="Morty", @color="Saphire-blue", @is_hungry=true>
 p dragon2.eat(5) # Prints: "Is Ice still hungry? false - they're full!"
 
+
+
 #  Write a Hobbit class
 #  it should have a dynamic name attribute (string)
 #  it should have a dynamic disposition attribute (string)
