@@ -3,13 +3,14 @@
 # it should have a color attribute, that is silver by default
 # it should have a method called "say" that returns whatever string is passed in, with "*~*" at the beginning and end of the string
 class Unicorn
-    def initialize(name)
+    attr_reader :name, :color
+    def initialize(name, color="Silver")
         @name = name
-        @color = "Silver"
+        @color = color
     end
 
     def say(something)
-        return "*~* #{something}"
+        "*~* #{something}"
     end
 end
 
@@ -18,8 +19,8 @@ unicorn1 = Unicorn.new("Penelope")  # Creates a new object instance from the Uni
 p unicorn1 # Prints: #<Unicorn:0x000000015497fb08 @name="Penelope", @color="Silver">
 p unicorn1.say("You have to come with us to candy mountain Charlie!") # Prints: "*~* Let's go to candy mountain Charlie!"
 
-unicorn2 = Unicorn.new("Francisco") # Creates a new object instance from the Unicorn class
-p unicorn2 # Prints: #<Unicorn:0x000000011d857370 @name="Francisco", @color="Silver">
+unicorn2 = Unicorn.new("Francisco","glimmery-pearl") # Creates a new object instance from the Unicorn class
+p unicorn2 # Prints: #<Unicorn:0x000000011d857370 @name="Francisco", @color="glimmery-pearl">
 p unicorn2.say("Yea Charlie! It'll be an adventure Charlie!") #Prints: "*~* Yea Charlie! It'll be an adventure Charlie!"
 
 
@@ -29,7 +30,7 @@ p unicorn2.say("Yea Charlie! It'll be an adventure Charlie!") #Prints: "*~* Yea 
 #  it should have a thirsty attribute, that is true by default
 #  it should have a drink method. When called, the thirsty attribute changes to false
 class Vampire
-    attr_reader :thirsty, :pet
+    attr_reader :name, :pet, :thirsty
 
     def initialize(name, pet = "Bat")
         @name = name
@@ -37,24 +38,22 @@ class Vampire
         @thirsty = true
     end
 
-    def drink(drank)
-        if drank
-            @thirsty = false
-            return "Still thirsty? #{@thirsty}."
-        end
+    def drink
+        @thirsty = false
+        "Still thirsty? #{@thirsty}."
     end
 end
 
 # Tests
 vampire1 = Vampire.new("Vladimir") # Creates a new object instance vampire1 from the class Vampire
 p vampire1 # Prints: #<Vampire:0x000000013a188bd0 @name="Vladimir", @pet="Bat", @thirsty=true>
-p vampire1.drink(true) # Prints: "Still thirsty? false."
-p vampire1.thirsty # Accessible attribute value via the attr_reader. Prints: false
+p vampire1.drink # Prints: "Still thirsty? false."
+p vampire1.thirsty # Prints: false
 
 vampire2 = Vampire.new("Veronica", "Snake") # Creates a new object instance vampire2 from the class Vampire
 p vampire2 # Prints: #<Vampire:0x000000013a1888b0 @name="Veronica", @pet="Snake", @thirsty=true>
 p vampire2.thirsty # Prints: true
-p vampire2.pet # Accessible attribute value via the attr_reader. Prints: "Snake"
+p vampire2.pet # Prints: "Snake"
 
 
 
@@ -65,31 +64,38 @@ p vampire2.pet # Accessible attribute value via the attr_reader. Prints: "Snake"
 #  it should have a is_hungry attribute that is true by default
 #  it should have a eat method. If the dragon eats 4 times, it is no longer hungry
 class Dragon
+    attr_reader :name, :rider, :color, :is_hungry, :times_eaten
     def initialize(name,rider,color)
         @name = name
         @rider = rider
         @color = color
         @is_hungry = true
+        @times_eaten = 0
     end
 
-    def eat(times_eaten)
-        if times_eaten >= 4
-            @is_hungry = false
-            return "Is #{@name} still hungry? #{@is_hungry} - they're full!"
-        else
-            return "Is #{@name} still hungry? #{@is_hungry} - find food!."
+    def eat
+        if @times_eaten < 4
+          @times_eaten += 1
+          "Times eaten = #{@times_eaten}."
+        elsif @times_eaten == 4 
+          @is_hungry = false
+          "Is hungry? #{@is_hungry}"
         end
     end
 end
 
 # Tests:
 dragon1 = Dragon.new("Fire","Rick","Ruby-red") # Creates a new object instance dragon1 from the Dragon class
-p dragon1 # Prints: #<Dragon:0x000000013a97ae10 @name="Fire", @rider="Rick", @color="Ruby-red", @is_hungry=true>
-p dragon1.eat(3) # Prints: "Is Fire still hungry? true - find food!."
+p dragon1 # Prints: #<Dragon:0x00007fd56e8710e0 @name="Fire", @rider="Rick", @color="Ruby-red", @is_hungry=true, @times_eaten=0>
+dragon1.eat # Prints: "Times Eaten = 1." 
+dragon1.eat # Prints: "Times Eaten = 2." 
+dragon1.eat # Prints: "Times Eaten = 3."
+p dragon1.eat # Prints: "Times eaten = 4."
+p dragon1.is_hungry # Prints: false
 
 dragon2 = Dragon.new("Ice","Morty","Saphire-blue") # Creates a new object instance dragon2 from the Dragon class
-p dragon2 # Prints: #<Dragon:0x000000013a97ab18 @name="Ice", @rider="Morty", @color="Saphire-blue", @is_hungry=true>
-p dragon2.eat(5) # Prints: "Is Ice still hungry? false - they're full!"
+p dragon2 # Prints: #<Dragon:0x00007f87db414780 @name="Ice", @rider="Morty", @color="Saphire-blue", @is_hungry=true, @times_eaten=0>
+p dragon2.eat # Prints: "Times eaten = 1."
 
 
 
@@ -102,8 +108,8 @@ p dragon2.eat(5) # Prints: "Is Ice still hungry? false - they're full!"
 #  it should have an is_old attribute that defaults to false. once a Hobbit is 101, it is old.
 #  it should have a has_ring attribute. If the Hobbit's name is "Frodo", true, if not, false.
 class Hobbit
-    attr_reader :disposition
-    
+    attr_reader :name, :disposition, :age, :is_adult, :is_old, :has_ring
+
     def initialize(name, disposition, age = 0)
         @name = name
         @disposition = disposition
@@ -112,40 +118,41 @@ class Hobbit
         @is_old = false
         @has_ring = false
     end
-  
-    def celebrate_birthday()
-        @age = @age + 1
+
+    def celebrate_birthday
+        @age =+ 1
     end
-    
-    def check_age()
-      if @age > 33 && @age < 101
-        @is_adult = true 
-        return "#{@is_adult} - I am an adult"
-      elsif @age >= 101
-        @is_old = true
-        return "#{@is_old} - I am old!"
-      end
+
+    def check_age
+        if @age > 33 && @age < 101
+            @is_adult = true 
+            return "#{@is_adult} - I am an adult"
+        elsif @age >= 101
+            @is_old = true
+            return "#{@is_old} - I am old!"
+        end
     end
-  
-    def check_ring()
-      if @name == "Frodo"
+
+    def has_ring?
+        @name == "Frodo"
         @has_ring = true
-      end
     end
-  end    
-  
-  # Tests:
-  hobbit1 = Hobbit.new("Frodo","obsessed") # Creates a new object instance hobbit1 from the Hobbit class.
-  p hobbit1 # Prints: #<Hobbit:0x00007fa288c35398 @name="Frodo", @disposition="obsessed", @age=0, @is_adult=false, @is_old=false, @has_ring=false>
-  p hobbit1.celebrate_birthday # Prints: 1
-  p hobbit1.celebrate_birthday # Prints: 2
-  p hobbit1.check_ring # Prints: true
-  p hobbit1.disposition #Prints "Obsessed"
-  
-  hobbit2 = Hobbit.new("Beorn","Wise", 123) # Creates a new object instance hobbit2 from the class Hobbit
-  p hobbit2 # Prints: #<Hobbit:0x00007f5e3e4f9310 @name="Beorn", @disposition="Wise", @age=123, @is_adult=false, @is_old=false, @has_ring=false>
-  p hobbit2.check_age #Prints: "true - I am old!"
-  
-  hobbit3 = Hobbit.new("Samwise","Anxious",45) # Creates a new object instance hobbit3 from the class Hobbit
-  p hobbit3 # Prints: #<Hobbit:0x00007f8f02008dc0 @name="Samwise", @disposition="Anxious", @age=45, @is_adult=false, @is_old=false, @has_ring=false>
-  p hobbit3.check_age # Prints: "true - I am an adult"
+end    
+
+# Tests:
+hobbit1 = Hobbit.new("Frodo","obsessed") # Creates a new object instance hobbit1 from the Hobbit class.
+p hobbit1 # Prints: #<Hobbit:0x00007fa288c35398 @name="Frodo", @disposition="obsessed", @age=0, @is_adult=false, @is_old=false, @has_ring=false>
+hobbit1.celebrate_birthday # Should add 1
+hobbit1.celebrate_birthday # Should add 1, total will be 2
+hobbit1.age #prints 2
+p hobbit1.has_ring? # Prints: true because frodo has the ring
+p hobbit1.has_ring # Prints: true because .has_ring? method has changed (mutated?) the @has_ring attribute from false to true 
+p hobbit1.disposition #Prints "Obsessed"
+
+hobbit2 = Hobbit.new("Beorn","Wise", 123) # Creates a new object instance hobbit2 from the class Hobbit
+p hobbit2 # Prints: #<Hobbit:0x00007f5e3e4f9310 @name="Beorn", @disposition="Wise", @age=123, @is_adult=false, @is_old=false, @has_ring=false>
+p hobbit2.check_age #Prints: "true - I am old!"
+
+hobbit3 = Hobbit.new("Samwise","Anxious",45) # Creates a new object instance hobbit3 from the class Hobbit
+p hobbit3 # Prints: #<Hobbit:0x00007f8f02008dc0 @name="Samwise", @disposition="Anxious", @age=45, @is_adult=false, @is_old=false, @has_ring=false>
+p hobbit3.check_age # Prints: "true - I am an adult"
